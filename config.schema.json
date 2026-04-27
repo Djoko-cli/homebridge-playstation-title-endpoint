@@ -1,0 +1,36 @@
+{
+  "pluginAlias": "playstation",
+  "pluginType": "platform",
+  "footerDisplay": "Homebridge plugin for PlayStation 4/5 consoles (PlayActor + external title endpoint).",
+  "singular": true,
+
+  "schema": {
+    "type": "object",
+    "properties": {
+      "endpoint": {
+        "title": "Title endpoint URL",
+        "type": "string",
+        "required": true,
+        "description": "URL of your external status endpoint (e.g. http://nas:port/status)"
+      },
+
+      "pollInterval": {
+        "title": "Poll interval",
+        "type": "integer",
+        "default": 60000,
+        "description": "Polling interval in milliseconds"
+      },
+
+      "language": {
+        "title": "Language",
+        "type": "string",
+        "default": "en",
+        "oneOf": [
+          { "title": "English", "enum": ["en"] },
+          { "title": "Français", "enum": ["fr"] }
+        ],
+        "description": "Language used for titles and log messages."
+      }
+    }
+  }
+}

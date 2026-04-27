@@ -1,0 +1,62 @@
+{
+  "displayName": "Homebridge Playstation",
+  "name": "homebridge-playstation-title-endpoint",
+  "version": "2.0.0",
+  "description": "PlayStation integration for Homebridge using PlayActor and an external title endpoint (with NPSSO UX mode).",
+  "license": "MIT",
+
+  "author": {
+    "name": "Djoko-cli",
+    "email": "majid.riviere@gmail.com",
+    "url": "https://github.com/Djoko-cli"
+  },
+
+  "contributors": [
+    {
+      "name": "NikDev (original plugin)",
+      "url": "https://github.com/NikDevx"
+    }
+  ],
+
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Djoko-cli/homebridge-playstation-title-endpoint.git"
+  },
+
+  "bugs": {
+    "url": "https://github.com/Djoko-cli/homebridge-playstation-title-endpoint/issues"
+  },
+
+  "engines": {
+    "node": ">=16.0.0",
+    "homebridge": ">=1.6.0"
+  },
+
+  "main": "index.js",
+
+  "bin": {
+    "homebridge-playstation-login": "./cli.js"
+  },
+
+  "files": [
+    "*.js",
+    "config.schema.json",
+    "locales.js",
+    "LICENSE",
+    "README.md"
+  ],
+
+  "keywords": [
+    "homebridge-plugin",
+    "playstation",
+    "ps5",
+    "remote-play",
+    "title",
+    "endpoint",
+    "npsso"
+  ],
+
+  "dependencies": {
+    "playactor": "^0.4.1"
+  }
+}

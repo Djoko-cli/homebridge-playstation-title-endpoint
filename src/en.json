@@ -1,0 +1,8 @@
+{
+  "loading": "Loading…",
+  "notPlaying": "Not playing",
+  "npssoExpired": "NPSSO expired",
+  "npssoRecovered": "NPSSO valid again, returning to normal mode",
+  "deviceOn": "Console ON",
+  "deviceOff": "Console OFF"
+}
