@@ -47,6 +47,7 @@ Settings → System → Remote Play → Link Device
 
 ```bash
 homebridge-playstation-login
+```
 
 3. Enter the 8‑digit code shown on your console.
 This step is required only once.
@@ -61,6 +62,7 @@ Then add the platform to your Homebridge `config.json`:
 "pollInterval": 60000,
 "language": "en"
 }
+```
 
 ### Parameters
 
@@ -82,6 +84,7 @@ The plugin expects a simple JSON response:
 "online": true,
 "title": "Horizon Forbidden West"
 }
+```
 
 ### NPSSO UX Mode
 
@@ -92,6 +95,7 @@ If the endpoint returns a title containing `"npsso"` (case‑insensitive):
 "online": true,
 "title": "NPSSO expiré"
 }
+```
 
 The plugin enters **NPSSO UX mode**:
 
@@ -128,6 +132,7 @@ Affects fallback titles, NPSSO messages, and logs.
 
 ```json
 "language": "fr"
+```
 
 ## Troubleshooting
 
