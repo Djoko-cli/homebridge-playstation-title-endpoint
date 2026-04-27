@@ -17,7 +17,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/Djoko-cli/homebridge-playstation-title-endpoint.git"
+    "url": "git+https://github.com/Djoko-cli/homebridge-playstation-title-endpoint.git"
   },
   "bugs": {
     "url": "https://github.com/Djoko-cli/homebridge-playstation-title-endpoint/issues"
@@ -28,7 +28,7 @@
   },
   "main": "index.js",
   "bin": {
-    "homebridge-playstation-login": "./cli.js"
+    "homebridge-playstation-login": "cli.js"
   },
   "files": [
     "*.js",
