@@ -7,6 +7,13 @@
   "schema": {
     "type": "object",
     "properties": {
+      "name": {
+        "title": "Platform Name",
+        "type": "string",
+        "default": "PlayStation",
+        "description": "Internal name used by Homebridge to identify this platform."
+      },
+
       "endpoint": {
         "title": "Title endpoint URL",
         "type": "string",
@@ -31,6 +38,11 @@
         ],
         "description": "Language used for titles and log messages."
       }
-    }
+    },
+
+    "required": [
+      "name",
+      "endpoint"
+    ]
   }
 }

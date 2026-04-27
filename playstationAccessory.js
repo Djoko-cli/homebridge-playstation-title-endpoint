@@ -5,7 +5,7 @@ const https = require("https");
 const { Device } = require("playactor/dist/device");
 const { DeviceStatus } = require("playactor/dist/discovery/model");
 const { PLUGIN_NAME } = require("./settings");
-const locales = require("./locales");
+const locales = require("./src");
 
 // ------------------------------------------------------------
 // HTTP utilities
