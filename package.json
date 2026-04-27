@@ -1,7 +1,7 @@
 {
   "displayName": "Homebridge Playstation",
   "name": "homebridge-playstation-title-endpoint",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "description": "PlayStation integration for Homebridge using PlayActor and an external title endpoint (with NPSSO UX mode).",
   "license": "MIT",
   "author": {
