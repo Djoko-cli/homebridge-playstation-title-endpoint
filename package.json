@@ -40,11 +40,12 @@
 
   "files": [
     "*.js",
+    "src",
     "config.schema.json",
-    "locales.js",
     "LICENSE",
     "README.md"
-  ],
+  ]
+,
 
   "keywords": [
     "homebridge-plugin",
