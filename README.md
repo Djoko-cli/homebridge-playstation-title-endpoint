@@ -53,16 +53,7 @@ homebridge-playstation-login
 This step is required only once.
 The generated credentials are stored locally and used by PlayActor for power control.
 
-Then add the platform to your Homebridge `config.json`:
-
-```json
-{
-"platform": "playstation",
-"endpoint": "http://your-endpoint/status",
-"pollInterval": 60000,
-"language": "en"
-}
-```
+Then add the console to HomeKit with Hombebridge pairing code displayed on Homebridge's logs
 
 ### Parameters
 
@@ -141,6 +132,13 @@ Affects fallback titles, NPSSO messages, and logs.
 - If titles do not update, verify the endpoint returns valid JSON  
 - If HomeKit shows “NPSSO expired”, renew your NPSSO token  
 - Restart Homebridge after changing configuration
+
+If at some point you have any problem, you can try to reset the Homebridge accessory and re-pair it.
+
+To do so, go to Homebridge UI > "Settings" > "Unpair Bridges / Cameras / TVs / External Accessories" and delete the Playstation.
+
+To reset the credentials used by PlayActor, you need to manually remove the directory /home/homebridge/.config/playactor
+
 
 ## Credits
 
