@@ -33,6 +33,7 @@ You can install it via Homebridge UI or manually using:
 
 ```bash
 npm install -g homebridge-playstation-title-endpoint
+```
 
 ## Configuration
 
