@@ -25,7 +25,19 @@ Everything runs cleanly inside a container.
 - NPSSO UX mode (token expired state)  
 - Multilingual (English / Français)  
 - Fully compatible with Homebridge Docker deployments  
+- Works on both **Homebridge v1.8** and **Homebridge v2**  
 - No Python, no PSNAWP local installation, no system dependencies
+
+## Requirements
+
+| | |
+|---|---|
+| Homebridge | `^1.8.0` or `^2.0.0` |
+| Node.js | 20.19+, 22.12+ or 24+ |
+
+Homebridge v2 ships HAP‑NodeJS v2 and drops Node.js 16/18, so `2.1.0` of this
+plugin does the same. If you are still on Node 16 or 18, stay on `2.0.5` until
+you can upgrade your runtime.
 
 ## Installation
 
@@ -33,6 +45,7 @@ You can install it via Homebridge UI or manually using:
 
 ```bash
 npm install -g homebridge-playstation-title-endpoint
+```
 
 ## Configuration
 
@@ -61,7 +74,8 @@ Then add the console to HomeKit with Hombebridge pairing code displayed on Homeb
 URL of your external status endpoint. Must return JSON with `"title"`.
 
 - **pollInterval**  
-Polling interval in milliseconds (default: 60000).
+Polling interval in milliseconds (default: 15000, minimum: 5000).  
+Values below the minimum are clamped and a warning is logged.
 
 - **language**  
 `"en"` or `"fr"` for titles and log messages.
@@ -94,6 +108,21 @@ The plugin enters **NPSSO UX mode**:
 - The console remains marked as **ON**
 - No false ON/OFF transitions
 - Normal mode resumes automatically when a valid title is received
+
+### Title sanitising
+
+HAP‑NodeJS v2 (bundled with Homebridge 2) validates names against Apple's
+HomeKit naming rules and rejects anything outside letters, numbers, spaces,
+apostrophes and common punctuation. Game titles regularly contain `™`, `®` or
+emoji, so every title is sanitised before it reaches HomeKit:
+
+| Endpoint returns | HomeKit shows |
+|---|---|
+| `HELLDIVERS™ 2` | `HELLDIVERS 2` |
+| `Marvel's Spider-Man 2` | `Marvel's Spider-Man 2` |
+| `🎮` (nothing usable) | `Not playing` |
+
+Names are also truncated to the 64‑character HomeKit limit.
 
 ## HomeKit Pairing
 
@@ -139,6 +168,25 @@ To do so, go to Homebridge UI > "Settings" > "Unpair Bridges / Cameras / TVs / E
 
 To reset the credentials used by PlayActor, you need to manually remove the directory /home/homebridge/.config/playactor
 
+## Upgrading from 2.0.x to 2.1.0
+
+No configuration change is required — 2.1.0 reads the same `config.json` and the
+same PlayActor credentials, and the accessory keeps its HomeKit identity, so
+there is nothing to re-pair.
+
+What changed under the hood:
+
+- Declares support for Homebridge v2 (`engines.homebridge: "^1.8.0 || ^2.0.0"`),
+  so the readiness check in the Homebridge UI turns green
+- Requires Node.js 20.19+ (Homebridge v2 itself requires 22+)
+- Discovery now runs on `didFinishLaunching` instead of during plugin load, so
+  the plugin no longer delays Homebridge startup
+- Timers are released on the Homebridge `shutdown` event
+- Endpoint requests use `fetch` with a 10s timeout, instead of an untimed
+  `http.get` that could hold a socket open forever
+- Titles are sanitised for HAP‑NodeJS v2's name validation (see above)
+- `pollInterval` now defaults to 15000 ms everywhere (the accessory used to fall
+  back to 120000 ms while the config UI advertised 15000 ms)
 
 ## Credits
 

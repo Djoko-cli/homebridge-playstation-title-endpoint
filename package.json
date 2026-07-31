@@ -1,9 +1,10 @@
 {
   "displayName": "Homebridge Playstation",
   "name": "homebridge-playstation-title-endpoint",
-  "version": "2.0.5",
+  "version": "2.1.0",
   "description": "PlayStation integration for Homebridge using PlayActor and an external title endpoint (with NPSSO UX mode).",
   "license": "MIT",
+  "type": "commonjs",
   "author": {
     "name": "Djoko-cli",
     "email": "majid.riviere@gmail.com",
@@ -23,8 +24,8 @@
     "url": "https://github.com/Djoko-cli/homebridge-playstation-title-endpoint/issues"
   },
   "engines": {
-    "node": ">=16.0.0",
-    "homebridge": ">=1.6.0"
+    "node": "^20.19.0 || ^22.12.0 || ^24.0.0",
+    "homebridge": "^1.8.0 || ^2.0.0"
   },
   "main": "index.js",
   "bin": {
@@ -35,7 +36,8 @@
     "src",
     "config.schema.json",
     "LICENSE",
-    "README.md"
+    "README.md",
+    "PS5 title change.gif"
   ],
   "keywords": [
     "homebridge-plugin",

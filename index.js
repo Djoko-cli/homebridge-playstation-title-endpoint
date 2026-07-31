@@ -1,6 +1,8 @@
 "use strict";
-const settings_1 = require("./settings");
-const playstationPlatform_1 = require("./playstationPlatform");
+
+const { PLATFORM_NAME, PLUGIN_NAME } = require("./settings");
+const { PlaystationPlatform } = require("./playstationPlatform");
+
 module.exports = (api) => {
-    api.registerPlatform(settings_1.PLATFORM_NAME, playstationPlatform_1.PlaystationPlatform);
+    api.registerPlatform(PLUGIN_NAME, PLATFORM_NAME, PlaystationPlatform);
 };
