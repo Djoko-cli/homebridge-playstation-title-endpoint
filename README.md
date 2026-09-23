@@ -56,7 +56,7 @@ Before Homebridge can control your console, you must pair it using the Remote Pl
 1. Put your PlayStation in **Remote Play pairing mode**  
 Settings → System → Remote Play → Link Device
 
-2. Run the pairing tool:
+2. Run the pairing tool from the **Homebridge UI terminal**:
 
 ```bash
 homebridge-playstation-login
@@ -64,9 +64,25 @@ homebridge-playstation-login
 
 3. Enter the 8‑digit code shown on your console.
 This step is required only once.
-The generated credentials are stored locally and used by PlayActor for power control.
 
-Then add the console to HomeKit with Hombebridge pairing code displayed on Homebridge's logs
+The credentials are stored in the Homebridge storage directory, next to
+`config.json`:
+
+```
+<storage>/homebridge-playstation-title-endpoint/credentials.json
+```
+
+With the official Docker image that is
+`/homebridge/homebridge-playstation-title-endpoint/credentials.json`, on the
+persistent volume, so the pairing survives container rebuilds. The pairing tool
+finds the storage directory on its own when run from the Homebridge UI terminal;
+from anywhere else (SSH, `docker exec`), pass it explicitly:
+
+```bash
+homebridge-playstation-login -U /var/lib/homebridge
+```
+
+Then add the console to HomeKit with the Homebridge pairing code displayed in Homebridge's logs
 
 ### Parameters
 
@@ -142,6 +158,8 @@ This fork was designed specifically for **Homebridge Docker**:
 - No privileged container required  
 - All logic runs inside Node.js  
 - External endpoint handles authentication and title retrieval  
+- Remote Play credentials live in the Homebridge storage directory, so they
+  survive container rebuilds without any extra volume  
 
 This architecture is stable, reproducible, and appliance‑grade.
 
@@ -157,16 +175,67 @@ Affects fallback titles, NPSSO messages, and logs.
 ## Troubleshooting
 
 - Make sure **Remote Play** is enabled on your PlayStation  
+- For the console to be found and woken up from rest mode, enable (on PS5)
+  *Settings → System → Power Saving → Features Available in Rest Mode →*
+  **Stay Connected to the Internet** and **Enable Turning On PS5 from Network**  
 - Ensure your **endpoint** is reachable from the Homebridge container  
 - If titles do not update, verify the endpoint returns valid JSON  
 - If HomeKit shows “NPSSO expired”, renew your NPSSO token  
 - Restart Homebridge after changing configuration
 
-If at some point you have any problem, you can try to reset the Homebridge accessory and re-pair it.
+### The console shows "No Response" in Home
 
-To do so, go to Homebridge UI > "Settings" > "Unpair Bridges / Cameras / TVs / External Accessories" and delete the Playstation.
+Look at the Homebridge log from the last start:
 
-To reset the credentials used by PlayActor, you need to manually remove the directory /home/homebridge/.config/playactor
+| Log line | Meaning |
+|---|---|
+| `ONBOARDING required` | no Remote Play credentials: run `homebridge-playstation-login` |
+| `No PlayStation found on the network yet` | the console did not answer; the plugin keeps looking and publishes it as soon as it does |
+| `PlayStation 5 XXXX is running on port …` | the plugin side is fine; look at the network / mDNS side |
+
+`Please add [PlayStation 5 XXXX] manually in Home app` is printed by Homebridge
+at **every** start, even when the console is already paired: it does not mean
+the pairing was lost.
+
+### Unpairing is a last resort
+
+"Unpair Bridges / Cameras / TVs / External Accessories" in the Homebridge UI
+deletes the console's HomeKit pairing for good: it then has to be added to Home
+again, and the scenes and automations using it are lost. Plugin updates never
+require it, since the console keeps the same HomeKit identity across versions.
+Only use it when the log shows the console as published and the Home app still
+refuses it.
+
+### Resetting the Remote Play credentials
+
+To reset the credentials used by PlayActor, delete `credentials.json` from
+`<storage>/homebridge-playstation-title-endpoint/` and run
+`homebridge-playstation-login` again. Keep the directory itself: its presence
+tells the plugin the pre‑2.2.0 credentials were already migrated, so they are
+not imported a second time.
+
+## Upgrading to 2.2.0
+
+Remote Play credentials move from PlayActor's default
+`~/.config/playactor/credentials.json` to the Homebridge storage directory
+(`<storage>/homebridge-playstation-title-endpoint/credentials.json`). In the
+official Docker image `~` is `/home/homebridge`, outside the `/homebridge`
+volume, so the console pairing was lost every time the container was recreated
+(new image, `docker compose up` after a change, Synology "Build"...).
+
+- Existing credentials are copied over automatically on first start. The log
+  says `Moved PlayActor credentials from … to …`, and there is nothing to
+  re‑pair.
+- If the container had already been recreated and the credentials are gone, the
+  log says `ONBOARDING required`: run `homebridge-playstation-login` once from
+  the Homebridge UI terminal.
+- The old file is left in place, so going back to 2.1.0 still works.
+
+The console is also no longer lost when it does not answer at startup. Discovery
+used to run once, for 30 seconds, when Homebridge started: a console switched
+off at that moment (typically during the restart a plugin update triggers) was
+never published and showed "No Response" until the next restart. The plugin now
+keeps looking, every minute, until the console answers.
 
 ## Upgrading from 2.0.x to 2.1.0
 

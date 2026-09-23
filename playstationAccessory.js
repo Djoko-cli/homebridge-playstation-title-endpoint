@@ -1,9 +1,9 @@
 "use strict";
 
-const { Device } = require("playactor/dist/device");
 const { DeviceStatus } = require("playactor/dist/discovery/model");
 const { PLUGIN_NAME, ENDPOINT_TIMEOUT } = require("./settings");
 const { sanitizeHomeKitName, fetchJson, describeError } = require("./utils");
+const { deviceWithId } = require("./credentialStore");
 const locales = require("./src");
 
 const PLACEHOLDER_SUBTYPE = "PSAXXXX";
@@ -170,7 +170,7 @@ class PlaystationAccessory {
     // PlayActor discovery
     // ------------------------------------------------------------
     async discoverDevice() {
-        const dev = Device.withId(this.deviceInformation.id);
+        const dev = deviceWithId(this.deviceInformation.id, this.platform.credentialsPath);
         this.deviceInformation = await dev.discover();
         return dev;
     }

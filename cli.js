@@ -7,11 +7,16 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const options_1 = require("playactor/dist/cli/options");
 const discovery_1 = require("playactor/dist/discovery");
 const readline_1 = __importDefault(require("readline"));
+const { credentialsPathFor, legacyCredentialsPath, migrateLegacyCredentials, resolveCliStoragePath } = require("./credentialStore");
+// Must match what the plugin reads: <Homebridge storage>/<plugin>/credentials.json
+const { storagePath, source } = resolveCliStoragePath();
+const credentialsPath = credentialsPathFor(storagePath);
 const connect = async (deviceId) => {
     try {
         const opt = new options_1.DeviceOptions();
         opt.dontAutoOpenUrls = true;
         opt.deviceHostId = deviceId;
+        opt.credentialsPath = credentialsPath;
         console.log(`Connecting to <${deviceId}>...`);
         const device = await opt.findDevice();
         const conn = await device.openConnection();
@@ -52,6 +57,21 @@ const discover = async () => {
     }
     return success;
 };
+console.log(`Homebridge storage: ${storagePath} (${source})`);
+console.log(`Credentials file:   ${credentialsPath}`);
+if (source === "default") {
+    console.warn("No Homebridge config.json found; pass -U <path> if your Homebridge storage lives elsewhere.");
+}
+try {
+    // an existing pairing from before 2.2.0 saves typing the PIN again
+    if (migrateLegacyCredentials(credentialsPath)) {
+        console.log(`Moved existing credentials from ${legacyCredentialsPath()}`);
+    }
+}
+catch (err) {
+    console.error(`Could not move existing credentials: ${err instanceof Error ? err.message : err}`);
+}
+console.log();
 discover()
     .then((success) => {
     if (success) {

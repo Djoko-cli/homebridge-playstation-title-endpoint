@@ -15,3 +15,7 @@ exports.MIN_POLL_INTERVAL = 5000;
 
 // How long a single request to the external title endpoint may take.
 exports.ENDPOINT_TIMEOUT = 10000;
+
+// Pause between two discovery attempts while no console has answered yet.
+// Each attempt already listens for playactor's 30 s discovery window.
+exports.DISCOVERY_RETRY_INTERVAL = 60000;
